@@ -212,7 +212,7 @@
                   <div class="d-flex flex-column h-100">
                     <p class="mb-1 pt-2 text-bold">Built by developers</p>
                     <h5 class="font-weight-bolder">CUSTOMIZATION SCREEN</h5>
-                  <a  href="#"> <button class=' btn btn-primary btn-sm btn-icon'>Site Information</button></a>
+                  <a  href="{{url_for('admins.addticket')}} "> <button class=' btn btn-primary btn-sm btn-icon'>Site Information</button></a>
                     <p class="mb-5">Change content like Titles , Subtitles and paragraphs  on your website from here</p>
                     
                   </div>
@@ -262,8 +262,8 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="d-flex flex-column h-100">
-                    <h5 class="font-weight-bolder">Features</h5>
-                    <p class="mb-5">Edit existing feeatures or add new features to be displayed on your website</p>
+                    <h5 class="font-weight-bolder">Tickets</h5>
+                    <p class="mb-5">Edit existing tickets or add new tickets to be displayed on your website</p>
                    
                   </div>
               </div>
@@ -283,6 +283,92 @@
                       <th class="text-secondary opacity-7"></th>
                     </tr>
                   </thead>
+                  <tbody>
+                  {% for ticket in tickets %}
+                  <tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                       
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ticket.name}}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{ ticket.description }}</p>
+                    </td>
+                 
+                    <td class="align-middle">
+                      <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                        <a href="#" class="btn btn-primary">Edit Feature</a>
+                        
+                        <button data-toggle="modal" data-target="#deletetick   {% for ticket in tickets %}
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                         
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ticket.name}}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-xs font-weight-bold mb-0">{{ ticket.description }}</p>
+                      </td>
+                   
+                      <td class="align-middle">
+                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="#" class="btn btn-primary">Edit Feature</a>
+                          
+                          <button data-toggle="modal" data-target="#"  class="btn btn-danger"><i class="fa fa-edit"></i>Delete</button>
+                          <div class="modal fade" id="d" tabindex="-1" role="dialog" aria-labelledby="edittestimonial" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="#">Modal title</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="#"
+                                  >
+                                    <input class='btn btn-danger' type="submit" value="Delete">
+                                    </div>
+                                  </form>
+                                </div> 
+                              </div>
+                            </div>
+                            </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      {% endfor %}
+                      et{{ticket.id}}"  class="btn btn-danger"><i class="fa fa-edit"></i>Delete</button>
+                        <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="edittestimonial" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="#"
+                                >
+                                  <input class='btn btn-danger' type="submit" value="Delete">
+                                  </div>
+                                </form>
+                              </div> 
+                            </div>
+                          </div>
+                          </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    {% endfor %}
+                    
                
                       
                   </tbody>-->

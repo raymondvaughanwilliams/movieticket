@@ -78,6 +78,8 @@ class Ticket(db.Model):
 
     def __repr__(self):
         return '<Addproduct %r>' % self.name
+    
+    
 # admin.add_view(ModelView(Report,db.session))
 
 

@@ -1,9 +1,10 @@
-from wtforms import BooleanField, StringField, PasswordField, validators , ValidationError, HiddenField
+from wtforms import BooleanField, StringField, PasswordField, validators , ValidationError, HiddenField,FloatField,IntegerField,SubmitField,SelectField,SelectMultipleField,TextAreaField,FileField,Form,DateTimeField
 from flask_wtf import FlaskForm, Form
+from wtforms.fields.html5 import DateField
+from flask_wtf.file import FileField,FileRequired,FileAllowed
 from structure.models import User
 
 class RegistrationForm(FlaskForm):
-    name = StringField('Name', [validators.Length(min=4, max=25)])
     name = StringField('Name', [validators.Length(min=4, max=25)])
     username = StringField('Username', [validators.Length(min=4, max=25)])
     email = StringField('Email Address', [validators.Length(min=6, max=35)])
@@ -28,3 +29,18 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email Address', [validators.Length(min=6, max=35)])
     password = PasswordField('New Password', [validators.DataRequired()])
+ 
+
+
+class Addtickets(Form):
+    name = StringField('Name', [validators.DataRequired()])
+    price = FloatField('Price', [validators.DataRequired()])
+    date = DateField('Date', [validators.DataRequired()] ,format='%Y-%m-%d')
+    discount = IntegerField('Discount', default=0)
+    description = TextAreaField('Discription', [validators.DataRequired()])
+    genre = SelectField('Genre', choices=[])
+
+    image_1 = FileField('Image 1', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
+    image_2 = FileField('Image 2', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
+    image_3 = FileField('Image 3', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
+    submit = SubmitField('SUBMIT')

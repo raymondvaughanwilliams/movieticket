@@ -26,7 +26,7 @@ def index():
     '''
     page = request.args.get('page', 1, type=int)
  
-    return render_template('index.html')
+    return render_template('info.html')
 # @core.route('/base')
 # def base():
 #     '''

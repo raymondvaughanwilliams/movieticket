@@ -1,0 +1,67 @@
+
+
+
+
+
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="text-center bg-info p-2 h4">Add a product</div>
+                {% from "_formhelpers.html" import render_field %}
+                <form method="post" action="{{ url_for('admins.addticket') }}" enctype="multipart/form-data">
+                <div>
+                    {{ render_field(form.name, class="form-control") }}
+                    {{ render_field(form.price, class="form-control") }}
+                    {{ render_field(form.discount, class="form-control") }}
+                    {{ render_field(form.date, class="form-control") }}
+                    <label for="genre">Pick a genre</label>
+                    <select name="genre" id="genre" class="form-control" required>
+                        {% if getproduct %}
+                        <option value="{{getproduct.genre_id}}" style="display: none;">{{getproduct.genre.name}}</option>
+                        {% for genre in genres %}
+                        <option value="{{genre.id}}">{{genre.name}}</option>
+                        {% endfor %}
+                       {% else %}
+                     <option value=""> Select A genre</option>
+                     {% for genre in genres %}
+                     <option value="{{genre.id}}">{{genre.name}}</option>
+                     
+                     {% endfor %}
+                     {% endif %}
+                    </select>
+
+               
+
+                    {{ render_field(form.description, class="form-control", rows="10") }}
+                </div>
+                <div class="container">
+                    <div class="row">
+                        {% if getproduct %}
+                        <div class="col-md-4"> <input type="file" name="image_1" id="image_1">
+                            <a href="{{url_for('static',filename='images/' + getproduct.image_1)}}"> images/{{ getproduct.image_1}}</a>
+                        </div>
+                      
+                      
+                        {% else %}
+                        <div class="col-md-4">{{ render_field(form.image_1) }}</div>
+                   
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>                </form>
+            </div>
+      <div class="col-md-1"></div>
+    </div>
+</div>
+
+{% for genre in genres%}
+{{genre.name}}
+{% endfor %}
+
