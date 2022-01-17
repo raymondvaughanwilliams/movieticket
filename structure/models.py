@@ -68,6 +68,8 @@ class Ticket(db.Model):
     pub_date = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
 
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'),nullable=False)
+    # genree = db.relationship('Genre',backref=db.backref('genres', lazy=True))
+
     # category = db.relationship('Category',backref=db.backref('category', lazy=True))
 
     userr_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable=False)
