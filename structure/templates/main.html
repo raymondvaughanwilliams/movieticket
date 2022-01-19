@@ -134,6 +134,7 @@ Licence URI: https://www.os-templates.com/template-terms
       <ul class="nospace group prices">
         
         {% for ticket in tickets  %}
+        {% if ticket.status == 'active' %}
         <li class="one_third">
           <img src="static/images/{{ticket.image_1}}" alt="..." class="img-thumbnail">
           <h6 class="heading">{{ticket.name}}</h6>
@@ -142,6 +143,7 @@ Licence URI: https://www.os-templates.com/template-terms
             <footer><a class="btn" href="#">Buy Ticket</a></footer>
           </article>
         </li>
+        {% endif %}
         {% endfor %}
       </ul>
     </section>

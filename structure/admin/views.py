@@ -37,7 +37,9 @@ def addticket():
         description = form.description.data
         genre = request.form.get('genre')
         image_1 = photos.save(request.files['image_1'], name=secrets.token_hex(10) + ".")
-        ticket = Ticket(name= name,price=price,date=date,discount_price=discount,description=description,image_1=image_1,genre=genre,userr_id='1',pub_date=datetime.utcnow(),genre_id=1)
+        status = form.status.data
+        showingdates = form.showingdates.data
+        ticket = Ticket(name= name,price=price,date=date,discount_price=discount,description=description,image_1=image_1,genre=genre,userr_id='1',pub_date=datetime.utcnow(),genre_id=1,status=status,showingdates=showingdates)
         db.session.add(ticket)
         db.session.commit()
         flash(f'Ticket added successfully','success')
@@ -61,6 +63,8 @@ def updateticket(ticket_id):
         ticket.date = form.date.data 
         ticket.description = form.description.data
         ticket.genre = genre
+        ticket.status = form.status.data
+        ticket.showingdates = form.showingdates.data
         if request.files.get('image_1'):
             try:
                 os.unlink(os.path.join(current_app.root_path, "static/images/" + ticket.image_1))
@@ -77,6 +81,8 @@ def updateticket(ticket_id):
     form.date.data = ticket.date
     form.description.data = ticket.description
     genre = ticket.genre
+    form.status.data = ticket.status
+    form.showingdates.data = ticket.showingdates
     return render_template('addticket.html', form=form, title='Update ticket',getticket=ticket,genres=genres)  
 
     

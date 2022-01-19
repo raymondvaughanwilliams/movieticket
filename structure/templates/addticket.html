@@ -54,6 +54,11 @@
                         {% endif %}
                     </div>
                 </div>
+                {{ render_field(form.status, class="form-control") }}
+                {{ render_field(form.showingdates , class="form-control") }}
+
+
+
                 <div class="form-group">
                     {{ form.submit(class="btn btn-outline-info") }}
                 </div>                </form>

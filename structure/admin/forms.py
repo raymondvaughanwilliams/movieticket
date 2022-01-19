@@ -39,6 +39,10 @@ class Addtickets(Form):
     discount = IntegerField('Discount', default=0)
     description = TextAreaField('Discription', [validators.DataRequired()])
     genre = SelectField('Genre', choices=[])
+    status = SelectField('Status', choices=[('active','Active'),('inactive','Inactive')])
+    # status = StringField('Status', default=True)
+    showingdates = TextAreaField('Showing Dates and Times', [validators.DataRequired()])
+
 
     image_1 = FileField('Image 1', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
     image_2 = FileField('Image 2', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])

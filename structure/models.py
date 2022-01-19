@@ -62,6 +62,9 @@ class Ticket(db.Model):
     description = db.Column(db.String(255), nullable= True)
     price = db.Column(db.Float, nullable=False)
     discount_price = db.Column(db.Float, nullable=True)
+    status = db.Column(db.Text, default='True')
+    showingdates = db.Column(db.String(255), nullable=True)
+
 
     genre = db.Column(db.String(255), nullable= True)
 
