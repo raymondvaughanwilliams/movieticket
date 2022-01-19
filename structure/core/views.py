@@ -10,11 +10,12 @@ from flask import render_template,request,Blueprint
 # from structure.about.forms import AboutForm
 # from structure.block.forms import BlockForm
 # from sqlalchemy.orm import load_only
+from sqlalchemy import desc
 from flask_login import login_required
 # from structure.appearance.forms import AppearanceForm
 # from structure.block.forms import BlockForm
 # from structure.appearance.views import appearance
-# from structure.models import Appearance
+from structure.models import Ticket,Genre
 core = Blueprint('core',__name__)
 
 @core.route('/')
@@ -25,8 +26,11 @@ def index():
     number of posts by limiting its query size and then calling paginate.
     '''
     page = request.args.get('page', 1, type=int)
+    newtickets = Ticket.query.order_by(desc(Ticket.pub_date)).limit(3).all()
+    tickets = Ticket.query.order_by(desc(Ticket.pub_date)).all()
+    # posts = Post.query.order_by(desc(post.date)).limit(3).all()
  
-    return render_template('info.html')
+    return render_template('main.html',title='Home',tickets=tickets,page=page,newtickets=newtickets)
 # @core.route('/base')
 # def base():
 #     '''
