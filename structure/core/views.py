@@ -1,4 +1,6 @@
-from flask import render_template,request,Blueprint
+from flask import render_template,request,Blueprint,redirect,url_for,flash,jsonify,Blueprint,current_app
+from  structure import app,db,login_manager,photos
+
 # from structure.models import User,About,Price, WebFeature,Faq,Testimonial,Team,Appearance,Block
 # # from structure.team.views import team
 # from structure.web_features.forms import WebFeatureForm
@@ -15,11 +17,11 @@ from flask_login import login_required
 # from structure.appearance.forms import AppearanceForm
 # from structure.block.forms import BlockForm
 # from structure.appearance.views import appearance
-from structure.models import Ticket,Genre
+from structure.models import Ticket,Genre,OrderItem
+from structure.core.forms import Addorder
 core = Blueprint('core',__name__)
 
 @core.route('/')
-@login_required
 def index():
     '''
     This is the home page view. Notice how it uses pagination to show a limited
@@ -31,113 +33,62 @@ def index():
     # posts = Post.query.order_by(desc(post.date)).limit(3).all()
  
     return render_template('main.html',title='Home',tickets=tickets,page=page,newtickets=newtickets)
-# @core.route('/base')
-# def base():
-#     '''
-#     Example view of any other "core" page. Such as a info page, about page,
-#     contact page. Any page that doesn't really sync with one of the models.
-#     '''
-#     about = About.query.all()
-#     return render_template('base.html',about=about)
 
 
-# @core.route('/hmsui')
-# def hmsui():
-#     '''
-#     Example view of any other "core" page. Such as a info page, about page,
-#     contact page. Any page that doesn't really sync with one of the models.
-#     '''
-
-#     page = request.args.get('page', 1, type=int)
-#     web_features = WebFeature.query.order_by(WebFeature.date.desc()).paginate(page=page, per_page=10)
-#     about = About.query.get(1)
-#     price = Price.query.all()
-#     faq = Faq.query.all()
-#     testimonial = Testimonial.query.all()
-#     team= Team.query.all()
-#     serv = Price.features
-#     Blockform= BlockForm()
-#     team= Team.query.all()
-#     block= Block.query.all()
-#     Appearanceform = AppearanceForm()
-#     appearance=Appearance.query.all()
-#     # services=[]
-#     # service= serv.split(',')
-#     # services.append(service)
-#     return render_template('base2.html',web_features=web_features, about=about,pricing=price,faq=faq,testimonial=testimonial,team=team,serv=serv,Blockform=Blockform,appearance=appearance,Appearanceform=Appearanceform,block=block)
+# @core.route('/order')
+# def order():
+#     # use orderitem model to create new orderitems
+#     # orderitems = OrderItem.query.all()
 
 
 
-# @core.route('/editui')
-# @login_required
-# def editui():
-#     '''
-#     Example view of any other "core" page. Such as a info page, about page,
-#     contact page. Any page that doesn't really sync with one of the models.
-#     '''
-#     Webfeatureform= WebFeatureForm()
-#     Teammateform = UpdateTeamForm()
-#     Faqform = FaqForm() 
-#     Testimonialform = TestimonialForm()
-#     Pricingform = PriceForm()
-#     Aboutform = AboutForm()
-#     page = request.args.get('page', 1, type=int)
-#     web_features = WebFeature.query.order_by(WebFeature.date.desc()).paginate(page=page, per_page=10)
-#     about = About.query.get(1)
-#     price = Price.query.all()
-#     faq = Faq.query.all()
-#     Blockform= BlockForm()
-#     testimonial = Testimonial.query.all()
-#     team= Team.query.all()
-#     block= Block.query.all()
-#     Appearanceform = AppearanceForm()
-#     appearance=Appearance.query.all()
-#     # for appearances in appearance:
-#     #         appearance=Appearance.query.all()
-#     #         Appearanceform = AppearanceForm()
-#     #         Appearanceform.title_color.data = appearances.title_color
-#     #         Appearanceform.subtitle_color.data = appearances.subtitle_color
-#     #         Appearanceform.paragraph_color.data = appearances.paragraph_color
-#     #         Appearanceform.title_font.data = appearances.title_font
-#     #         Appearanceform.subtitle_font.data = appearances.subtitle_font
-#     #         Appearanceform.paragraph_font.data = appearances.paragraph_font
-#     #         Appearanceform.title_size.data = appearances.title_size
-#     #         Appearanceform.subtitle_size.data = appearances.subtitle_size
-#     #         Appearanceform.paragraph_size.data = appearances.paragraph_size
-#     #         Appearanceform.bootstrap_class1.data = appearances.bootstrap_class1
-#     #         Appearanceform.bootstrap_class2.data = appearances.bootstrap_class2
-#     #         Appearanceform.bootstrap_class3.data = appearances.bootstrap_class3
 
-
-#     # fields = ['id']
-#     # data = Testimonial.options(load_only(*fields)).all()
-#     emplist = []
-#     for faqs in faq:
-#         emplist.append("row:" +str(faqs.id))
-#     print(emplist)
-
-
-#     templist = []
-#     for testimonials in testimonial:
-#         templist= "row:" +str(testimonials.id)
-#     #     templist.append("row:" +str(testimonials.id))
-#     # print(templist)
+@core.route('/addorder/<int:ticket_id>', methods=['GET','POST'])
+def addorder(ticket_id):
+    form = Addorder()
+    order = OrderItem.query.all()
+    genre = Genre.query.all()
+    ticket = Ticket.query.all()
+    tid = ticket_id
+    # form.genre.choices = [(g.id, g.name) for g in Genre.query.filter_by(id='1').all()]
+    if request.method == 'POST':
+        quantity = form.quantity.data
+        date = form.date.data
+        time = form.time.data
+        coupon = form.coupon.data
+        order = OrderItem(ticket=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon)
+        db.session.add(order)
+        db.session.commit()
+        flash(f'Ticket added successfully','success')
+        return redirect(url_for('admins.admin'))
+    return render_template('order.html',title ="Add Ticket",form=form,genres=genre,tid=tid,tickets = ticket)
 
 
 
-#     print(faq)
-#     context={
-#         'about':about,
-#         'web_features':web_features,
-#         'price':price,
-#         'faq':faq,
-#         'testimonial':testimonial,
-#         'team':team,
-#     }
+@core.route('/updateorder/<int:order_id>/<int:ticket_id>', methods=['GET','POST'])
+def updateorder(order_id,ticket_id):
+    form = OrderItem()
+    order = OrderItem.query.get_or_404(order_id)
+    genres = Genre.query.all()
+    tid = ticket_id
 
-#     serv = Price.features
-#     # services=[]
-#     # service= serv.split(',')
-#     # services.append(service)
-#     return render_template('editui.html',block = block,web_features=web_features,about=about,webfeatureform = Webfeatureform,teammateform=Teammateform,faqform = Faqform,testimonialform=Testimonialform,priceform=Pricingform,aboutform=Aboutform,team=team,pricing=price,faq=faq,testimonial=testimonial,templist=templist,emplist=emplist,blockform=Blockform,appearanceform=Appearanceform,appearance=appearance)
-#     # return render_template('info.html',context=context,faq=faq)
+    category = request.form.get('genre')
+    if request.method =="POST":
+        order.ticket = form.ticket.data 
+        order.quantity = form.quantity.data
+        order.date = form.date.data
+        order.time = form.time.data
+        order.coupon = form.coupon.data
+        flash('The ticket was updated','success')
+        db.session.commit()
+        return redirect(url_for('admins.admin'))
+    form.ticket.data = order.ticket
+    form.quantity = order.quantity
+    form.date = order.date
+    form.time = order.time
+    form.coupon = order.coupon
+    return render_template('order.html', form=form, title='Update order',getorder=order,genres=genres,tid=tid)
+
+ # <a href="{{ url_for('admins.updateticket',ticket_id=ticket.id,order_id=order.id )}}" class="btn btn-primary">Edit Feature</a> 
+
+

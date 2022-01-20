@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<!--
+Template Name: Trealop
+Author: <a href="https://www.os-templates.com/">OS Templates</a>
+Author URI: https://www.os-templates.com/
+Copyright: OS-Templates.com
+Licence: Free to use under our free template licence terms
+Licence URI: https://www.os-templates.com/template-terms
+-->
+<html lang="">
+<!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
+<head>
+<title>SHINOBI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/layout.css') }}">
+
+</head>
+<body id="top">
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row1">
+  <header id="header" class="hoc clear">
+    <div id="logo" class="fl_left"> 
+      <!-- ################################################################################################ -->
+      <h1><a href="index.html">SHINOBI</a></h1>
+      <!-- ################################################################################################ -->
+    </div>
+    <nav id="mainav" class="fl_right"> 
+      <!-- ################################################################################################ -->
+      <ul class="clear">
+        <li class="active"><a href="index.html">Home</a></li>
+        
+        <li><a href="#newest">New Movies</a></li>
+            <li><a href="#nowshowing">Now Showing</a></li>
+        <li><a href="#about">About Us</a></li>
+      </ul>
+      <!-- ################################################################################################ -->
+    </nav>
+  </header>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper bgded overlay gradient" style="background-image:url('images/demo/backgrounds/01.png');">
+  <div id="pageintro" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <article>
+      <h3 class="heading">SHINOBI CINEMAS</h3>
+      <p>A PERFECT CINEMA</p>
+      <!--<footer>
+        <ul class="nospace inline pushright">
+          <li><a class="btn" href="#">Ultricies dui orci</a></li>
+          <li><a class="btn inverse" href="#">Mollis libero quis</a></li>
+        </ul>
+      </footer>-->
+    </article>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+  
+     
+          
+          {% for ticket in tickets  %}
+          {% if ticket.id == tid %}
+          <li class="one_third">
+            <img src="static/images/{{ticket.image_1}}" alt="..." class="img-thumbnail">
+            <h6 class="heading">{{ticket.name}}</h6>
+              <p>{{ticket.description}}</p>
+              <p><strong>{{ticket.price}}</strong><em> cedis</em></p>
+            </article>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+    </div>
+    </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="text-center bg-info p-2 h4">Add a product</div>
+                {% from "_formhelpers.html" import render_field %}
+                <form method="post" action="" enctype="multipart/form-data">
+                <div>
+                    {{ render_field(form.quantity, class="form-control") }}
+                    {{ render_field(form.time, class="form-control") }}
+                    {{ render_field(form.date, class="form-control") }}
+                    
+                  
+               
+
+                
+             
+
+
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>                </form>
+            </div>
+      <div class="col-md-1"></div>
+    </div>
+</div>
+
+{% for genre in genres%}
+{{genre.name}}
+{% endfor %}
+
+
+{{tid}}
+<br>
+{% for ticket in tickets%}
+{% if ticket.id == tid %}
+{{ticket.description}}
+{% endif %}
+{% endfor %}
+

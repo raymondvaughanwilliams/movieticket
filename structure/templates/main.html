@@ -83,7 +83,7 @@ Licence URI: https://www.os-templates.com/template-terms
           <h6 class="heading">{{ticket.name}}</h6>
           <p>{{ticket.description}}</p>
           <p><sup>&euro;</sup><strong>{{ticket.price}}</strong><em>cedis</em></p>
-          <footer><a class="btn" href="#">Buy Ticket</a></footer>
+          <footer><a class="btn"  href="{{ url_for('core.addorder',ticket_id=ticket.id) }}">Buy Ticket</a></footer>
         </article>
       </li>
       {% endfor %}
@@ -140,7 +140,7 @@ Licence URI: https://www.os-templates.com/template-terms
           <h6 class="heading">{{ticket.name}}</h6>
             <p>{{ticket.description}}</p>
             <p><strong>{{ticket.price}}</strong><em> cedis</em></p>
-            <footer><a class="btn" href="#">Buy Ticket</a></footer>
+            <footer><a class="btn"  href="{{ url_for('core.addorder',ticket_id=ticket.id) }}">Buy Ticket</a></footer>
           </article>
         </li>
         {% endif %}

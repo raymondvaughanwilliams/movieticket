@@ -128,9 +128,9 @@ class OrderItem(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     time = db.Column(db.String(255), nullable= True)
     coupon = db.Column(db.Integer, db.ForeignKey('coupons.id'),nullable=True)    
-    refund_requested = db.Column(db.Boolean, nullable=False, default=False)
+    refund_requested = db.Column(db.Boolean, nullable=True, default=False)
     refund_reason = db.Column(db.Text, nullable=True)
-    refund_granted = db.Column(db.Boolean, nullable=False, default=False)
+    refund_granted = db.Column(db.Boolean, nullable=True, default=False)
 
 
     def __str__(self):
@@ -226,7 +226,14 @@ class Coupon(db.Model):
 #     def __str__(self):
 #         return f"{self.pk}"
 
+# class Cart(db.Model):
+#     __table_args__ = {'extend_existing': True}
+#     ticketid = db.Column(db.Integer, db.ForeignKey('product.productid'), nullable=False, primary_key=True)
+#     quantity = db.Column(db.Integer, nullable=False)
+#     couponid = db.Column(db.Integer, db.ForeignKey('coupons.id'),nullable=True)
 
+#     def __repr__(self):
+#         return f"Cart('{self.userid}', '{self.productid}, '{self.quantity}')"
 
 
 @login_manager.user_loader
