@@ -128,9 +128,10 @@ class OrderItem(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     time = db.Column(db.String(255), nullable= True)
     coupon = db.Column(db.Integer, db.ForeignKey('coupons.id'),nullable=True)    
-    refund_requested = db.Column(db.Boolean, nullable=True, default=False)
+    refund_requested = db.Column(db.String, nullable=True, default=False)
     refund_reason = db.Column(db.Text, nullable=True)
     refund_granted = db.Column(db.Boolean, nullable=True, default=False)
+    ref_code = db.Column(db.String(20), nullable=True)
 
 
     def __str__(self):
@@ -144,6 +145,9 @@ class OrderItem(db.Model):
 
     def get_amount_saved(self):
         return self.get_total_item_price() - self.get_total_discount_item_price()
+
+    def get_ref_code(self):
+        return self.ref_code
 
     # def get_final_price(self):
     #     if self.item.discount_price:

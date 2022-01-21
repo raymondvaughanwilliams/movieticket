@@ -40,6 +40,7 @@ Licence URI: https://www.os-templates.com/template-terms
         <li><a href="#newest">New Movies</a></li>
             <li><a href="#nowshowing">Now Showing</a></li>
         <li><a href="#about">About Us</a></li>
+        <li><a href="#about">Update Ticket</a></li>
       </ul>
       <!-- ################################################################################################ -->
     </nav>
@@ -107,6 +108,7 @@ Licence URI: https://www.os-templates.com/template-terms
     
     <!-- ################################################################################################ -->
   </section>
+
 </div>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -115,6 +117,7 @@ Licence URI: https://www.os-templates.com/template-terms
   <article class="hoc cta clear"> 
     <!-- ################################################################################################ -->
     <h6 class="three_quarter first">Velit tristique sem vehicula laoreet nullam elementum</h6>
+   
     <footer class="one_quarter"><a class="btn" href="#">Ipsum pharetra leo</a></footer>
     <!-- ################################################################################################ -->
   </article>
@@ -217,6 +220,34 @@ Licence URI: https://www.os-templates.com/template-terms
     </ul>
     <!-- ################################################################################################ -->
   </section>
+
+</div>
+
+
+<button data-toggle="modal" data-target="#editaboutappearance" class="col-md-12"><i class="fas fa-palette"></i>Edit Appearance</i></button>
+<div class="modal fade" id="editaboutappearance" tabindex="-1" role="dialog" aria-labelledby="editaboutappearance" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editaboutappearance">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form  class="form-group" method="POST"   enctype=multipart/form-data action="{{ url_for('core.checkcoupon') }}">
+          <div class="form-group">
+            {{ form.ref_code.label(class="form-control-label") }}
+            {{ form.ref_code(class="form-control form-control-lg " ) }}
+          </div>
+
+          <div class="form-group">
+            {{ form.submit(class="button" , id="submitButton") }}
+          </div>
+        </form>
+      </div> 
+    </div>
+  </div>
 </div>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
