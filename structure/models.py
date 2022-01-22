@@ -76,6 +76,7 @@ class Ticket(db.Model):
     # category = db.relationship('Category',backref=db.backref('category', lazy=True))
 
     userr_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable=False)
+    # orders = db.relationship('OrderItem', backref='ticket', lazy=True)
     # userr = db.relationship('User',backref=db.backref('users', lazy=True))
 
     image_1 = db.Column(db.String(150), nullable=False, default='image1.jpg')

@@ -3,7 +3,7 @@ from  structure import app,db,login_manager,photos
 from .forms import RegistrationForm,LoginForm,Addtickets
 from structure.models import User
 from flask_admin.contrib.sqla import ModelView
-from structure.models import Ticket,Genre
+from structure.models import Ticket,Genre,OrderItem
 import secrets
 from datetime import datetime
 import os
@@ -20,7 +20,8 @@ def admin():
 #         return redirect(url_for('admins.login'))
     # products = Addproduct.query.all()
     tickets = Ticket.query.all()
-    return render_template('index.html',title ="Admin Page",tickets=tickets)
+    refund_orders = OrderItem.query.filter_by(refund_requested='yes').all()
+    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders)
 
  
     

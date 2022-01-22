@@ -347,6 +347,103 @@
 
 
 
+<!-- orders table -->
+<div class="row">
+  <div class="col-12">
+    <div class="card mb-4">
+      <div class="card-header pb-0">
+        
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="d-flex flex-column h-100">
+              <h5 class="font-weight-bolder">Tickets</h5>
+              <p class="mb-5">Edit existing tickets or add new tickets to be displayed on your website</p>
+             
+            </div>
+        </div>
+      </div>
+      <!--<a href="#" class="btn btn-primary btn-sm" style="float:right; vertical-align: top;">Add features</a>-->
+
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ticket</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Quantity</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Refund Reason</th>
+             
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                <th class="text-secondary opacity-7"></th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            
+
+
+            <tr>
+              <td>
+                <div class="d-flex px-2 py-1">
+                 
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">{{order.ticket}}</h6>
+             
+                  </div>
+                </div>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ order.quantity }}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ order.date }}...</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ order.refund_reason }}</p>
+              </td>
+              
+              <td class="align-middle">
+                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                  <a href="" class="btn btn-primary">Action</a> 
+                  
+                  <button data-toggle="modal" data-target="#deleteticket{{order.id}}"  class="btn btn-danger"><i class="fa fa-edit"></i>Delete</button>
+                  <div class="modal fade" id="deleteticket{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="edittestimonial" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="deleteticket{{order.id}}">Modal title</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action=""
+                          >
+                            <input class='btn btn-danger' type="submit" value="Delete">
+                            </div>
+                          </form>
+                        </div> 
+                      </div>
+                    </div>
+                    </div>
+              </td>
+            </tr>
+            <tr>
+              {% endfor %}
+              
+         
+                
+            </tbody>-->
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
 
     
     
