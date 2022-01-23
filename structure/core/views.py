@@ -72,6 +72,7 @@ def updateorder(ticket_id,order_id):
     form = Addorder()
     order = OrderItem.query.filter_by(id=order_id).first() 
     genres = Genre.query.all()
+    ticket = OrderItem.tickets.price
 
     category = request.form.get('genre')
     if request.method =="POST":
@@ -81,10 +82,13 @@ def updateorder(ticket_id,order_id):
         order.coupon = form.coupon.data
         order.refund_requested = form.refund_request.data
         order.refund_reason = form.refund_reason.data
+        total =  (int(ticket.price) * int(form.quantity.data))
+        order.totalprice = total
 
         flash('The ticket was updated','success')
         db.session.commit()
         return redirect(url_for('admins.admin'))
+    total = (float(ticket.price) * float(form.quantity.data))
     form.ticket.data = order.ticket
     form.quantity.data = order.quantity
     form.date.data = order.date
@@ -92,7 +96,8 @@ def updateorder(ticket_id,order_id):
     form.coupon.data = order.coupon
     form.refund_request.data = order.refund_requested   
     form.refund_reason.data = order.refund_reason
-    return render_template('updateorder.html', form=form, title='Update order',getorder=order,genres=genres)
+  
+    return render_template('updateorder.html', form=form, title='Update order',getorder=order,genres=genres,total=total)
 
  # <a href="{{ url_for('admins.updateticket',ticket_id=ticket.id,order_id=order.id )}}" class="btn btn-primary">Edit Feature</a> 
 
@@ -113,3 +118,30 @@ def checkcoupon():
             flash('Invalid coupon','danger')
             return redirect(url_for('admins.admin'))
     # return render_template('order.html', form=form, title='Update order',getorder=order)
+
+# route to approve refund
+@core.route('/approverefund/<int:order_id>', methods=['GET','POST'])
+def approverefund(order_id):
+    form = Addorder()
+    order = OrderItem.query.filter_by(id=order_id).first()
+    if request.method =="POST":
+        order.refund_granted = form.approve_refund.data
+  
+        flash('The refund was approved','success')
+        db.session.commit()
+        return redirect(url_for('admins.admin'))
+    form.approve_refund.data = order.refund_granted
+    return render_template('index.html', form=form, title='Approve refund',getorder=order)
+
+
+
+
+#function to add calculate total price
+
+def totalprice(order_id):
+    order = OrderItem.query.filter_by(id=order_id).first()
+    ticket = order.ticket
+    quantity = order.quantity
+    price = ticket.price
+    total = price * quantity
+    return total

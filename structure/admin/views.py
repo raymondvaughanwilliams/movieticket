@@ -7,6 +7,8 @@ from structure.models import Ticket,Genre,OrderItem
 import secrets
 from datetime import datetime
 import os
+from structure.core.forms import Addorder
+
 
 
 
@@ -20,8 +22,10 @@ def admin():
 #         return redirect(url_for('admins.login'))
     # products = Addproduct.query.all()
     tickets = Ticket.query.all()
+    form = Addorder()
+
     refund_orders = OrderItem.query.filter_by(refund_requested='yes').all()
-    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders)
+    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders,form=form)
 
  
     

@@ -131,8 +131,12 @@ class OrderItem(db.Model):
     coupon = db.Column(db.Integer, db.ForeignKey('coupons.id'),nullable=True)    
     refund_requested = db.Column(db.String, nullable=True, default=False)
     refund_reason = db.Column(db.Text, nullable=True)
-    refund_granted = db.Column(db.Boolean, nullable=True, default=False)
+    refund_granted = db.Column(db.String, nullable=True, default=False)
     ref_code = db.Column(db.String(20), nullable=True)
+    totalprice = db.Column(db.Float, nullable=True)
+    phone = db.Column(db.String(20), nullable=True)
+    tickets = db.relationship('Ticket',backref=db.backref('tickets', lazy=True))
+
 
 
     def __str__(self):

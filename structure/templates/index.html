@@ -380,7 +380,7 @@
             </thead>
             <tbody>
             {% for order in orders %}
-            
+            {% if order.refund_granted == 'no' %}
 
 
             <tr>
@@ -407,22 +407,32 @@
                 <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                   <a href="" class="btn btn-primary">Action</a> 
                   
-                  <button data-toggle="modal" data-target="#deleteticket{{order.id}}"  class="btn btn-danger"><i class="fa fa-edit"></i>Delete</button>
-                  <div class="modal fade" id="deleteticket{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="edittestimonial" aria-hidden="true">
+                  <button data-toggle="modal" data-target="#order{{order.id}}"  class="btn btn-danger"><i class="fa fa-edit"></i>Act</button>
+                  <div class="modal fade" id="order{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="edittestimonial" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="deleteticket{{order.id}}">Modal title</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <h5 class="modal-title" id="order{{order.id}}">Modal title</h5>
+                          
+                        <div class="modal-body">
+                          <p>{{order.ticket}}</p>
+                          <p>{{order.refund_reason}}</p>
+                          {% from "_formhelpers.html" import render_field %}
+
+                          <form action="{{ url_for('core.approverefund', order_id=order.id) }}" method='POST'>
+
+                            <div class="form-group">
+                              {{ render_field(form.approve_refund, class="form-control") }}
+
+                            {{ render_field(form.submit, class="form-control") }}
+                            </div>
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
-                        <div class="modal-body">
-                          <form action=""
-                          >
-                            <input class='btn btn-danger' type="submit" value="Delete">
+                      </form>
                             </div>
-                          </form>
+
+                    
                         </div> 
                       </div>
                     </div>
@@ -430,6 +440,7 @@
               </td>
             </tr>
             <tr>
+              {% endif %}
               {% endfor %}
               
          
