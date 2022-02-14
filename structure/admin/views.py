@@ -1,9 +1,10 @@
 from flask import render_template,session, request,redirect,url_for,flash,jsonify,Blueprint,current_app
+# from movieticket.structure.models import TicketSchema,MovieTicket
 from  structure import app,db,login_manager,photos
 from .forms import RegistrationForm,LoginForm,Addtickets
 from structure.models import User
 from flask_admin.contrib.sqla import ModelView
-from structure.models import Ticket,Genre,OrderItem
+from structure.models import Ticket,Genre,OrderItem,TicketSchema
 import secrets
 from datetime import datetime
 import os
@@ -28,6 +29,14 @@ def admin():
     return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders,form=form)
 
  
+@admins.route('/tickets')
+def tickets():
+    tickets = Ticket.query.all()
+    results = TicketSchema(many=True)
+    output = results.dump(tickets)
+    return jsonify(output)
+
+
     
 @admins.route('/addticket', methods=['GET','POST'])
 def addticket():
@@ -51,7 +60,25 @@ def addticket():
         return redirect(url_for('admins.admin'))
     return render_template('addticket.html',title ="Add Ticket",form=form,genres=genre)
 
+@admins.route('/addticketapi', methods=['GET','POST'])
+def addticketapi():
+    form = Addtickets()
+    genre = Genre.query.all()
+    # form.genre.choices = [(g.id, g.name) for g in Genre.query.filter_by(id='1').all()]
+    name = request.json['name']
+    price = request.json['price']
+    date = request.json['date'] 
+    discount = request.json['discount']
+    description = request.json['description']
+    genre = request.json['genre']
+    image_1 = photos.save(request.files['image_1'], name=secrets.token_hex(10) + ".")
+    status = request.json['status']
+    showingdates = request.json['showingdates']
 
+    ticket = Ticket(name= name,price=price,date=date,discount_price=discount,description=description,image_1=image_1,genre=genre,userr_id='1',pub_date=datetime.utcnow(),genre_id=1,status=status,showingdates=showingdates)
+    db.session.add(ticket)
+    db.session.commit()
+    return TicketSchema.jsonify(ticket)
 
 @admins.route('/updateticket/<int:ticket_id>', methods=['GET','POST'])
 def updateticket(ticket_id):

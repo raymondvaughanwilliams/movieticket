@@ -4,9 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+from flask_restful import Api
+from flask_marshmallow import Marshmallow 
 
 
 app = Flask(__name__)
+api=Api(app)
 
 
 app.config['SECRET_KEY'] = 'asecretkey'
@@ -26,6 +29,9 @@ with app.app_context():
         migrate.init_app(app, db, render_as_batch=True)
     else:
         migrate.init_app(app, db)
+
+
+ma = Marshmallow(app)
 
 #########################
 # LOGIN CONFIGS

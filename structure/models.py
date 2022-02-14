@@ -1,5 +1,5 @@
 #models.py
-from structure import db,login_manager,app
+from structure import db,login_manager,app,ma
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
@@ -64,6 +64,9 @@ class Ticket(db.Model):
     discount_price = db.Column(db.Float, nullable=True)
     status = db.Column(db.Text, default='True')
     showingdates = db.Column(db.String(255), nullable=True)
+    orderitems = db.relationship('OrderItem',back_populates="ticket")
+
+
 
 
     genre = db.Column(db.String(255), nullable= True)
@@ -85,7 +88,18 @@ class Ticket(db.Model):
     def __repr__(self):
         return '<Addproduct %r>' % self.name
     
-    
+
+
+
+
+  
+class TicketSchema(ma.Schema):
+  class Meta:
+    fields = ('id', 'name', 'description', 'price', 'date', 'discount_price', 'status', 'showingdates', 'genre', 'pub_date', 'image_1')
+
+# Init schema
+ticket_schema = TicketSchema()
+tickets_schema = TicketSchema(many=True)    
 # admin.add_view(ModelView(Report,db.session))
 
 
@@ -120,22 +134,22 @@ class Ticket(db.Model):
 
 
 class OrderItem(db.Model):
-    __tablename__ = 'order_items'
+    __tablename__ = 'orderitems'
 
     # ordered = models.BooleanField(default=False)
     id = db.Column(db.Integer, primary_key=True)
-    ticket = db.Column(db.Integer, db.ForeignKey('tickets.id'),nullable=False)
+    ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'),nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     date = db.Column(db.DateTime, nullable=False)
     time = db.Column(db.String(255), nullable= True)
     coupon = db.Column(db.Integer, db.ForeignKey('coupons.id'),nullable=True)    
     refund_requested = db.Column(db.String, nullable=True, default=False)
     refund_reason = db.Column(db.Text, nullable=True)
-    refund_granted = db.Column(db.String, nullable=True, default=False)
+    refund_granted = db.Column(db.String, nullable=True, default='no')
     ref_code = db.Column(db.String(20), nullable=True)
     totalprice = db.Column(db.Float, nullable=True)
     phone = db.Column(db.String(20), nullable=True)
-    tickets = db.relationship('Ticket',backref=db.backref('tickets', lazy=True))
+    ticket = db.relationship('Ticket',back_populates="orderitems")
 
 
 
@@ -153,6 +167,15 @@ class OrderItem(db.Model):
 
     def get_ref_code(self):
         return self.ref_code
+
+
+class OrderItemSchema(ma.Schema):
+  class Meta:
+    fields = ('id', 'ticket', 'quantity', 'date', 'time', 'coupon', 'refund_requested', 'refund_reason', 'refund_granted', 'ref_code', 'totalprice', 'phone')
+
+# Init schema
+orderitem_schema = OrderItemSchema()
+orderitems_schema = OrderItemSchema(many=True)    
 
     # def get_final_price(self):
     #     if self.item.discount_price:
@@ -243,6 +266,11 @@ class Coupon(db.Model):
 
 #     def __repr__(self):
 #         return f"Cart('{self.userid}', '{self.productid}, '{self.quantity}')"
+
+
+
+
+
 
 
 @login_manager.user_loader

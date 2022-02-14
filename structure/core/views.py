@@ -58,7 +58,7 @@ def addorder(ticket_id):
         date = form.date.data
         time = form.time.data
         coupon = form.coupon.data
-        order = OrderItem(ticket=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon,ref_code=ref_code)
+        order = OrderItem(ticket_id=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon,ref_code=ref_code)
         db.session.add(order)
         db.session.commit()
         flash(f'Ticket added successfully','success')
@@ -72,7 +72,7 @@ def updateorder(ticket_id,order_id):
     form = Addorder()
     order = OrderItem.query.filter_by(id=order_id).first() 
     genres = Genre.query.all()
-    ticket = OrderItem.tickets.price
+    ticket = OrderItem.ticket
 
     category = request.form.get('genre')
     if request.method =="POST":
@@ -82,13 +82,14 @@ def updateorder(ticket_id,order_id):
         order.coupon = form.coupon.data
         order.refund_requested = form.refund_request.data
         order.refund_reason = form.refund_reason.data
-        total =  (int(ticket.price) * int(form.quantity.data))
-        order.totalprice = total
+        order.refund_granted = 'no'
+        # total =  (int(ticket.price) * int(form.quantity.data))
+        # order.totalprice = total
 
         flash('The ticket was updated','success')
         db.session.commit()
         return redirect(url_for('admins.admin'))
-    total = (float(ticket.price) * float(form.quantity.data))
+    
     form.ticket.data = order.ticket
     form.quantity.data = order.quantity
     form.date.data = order.date
@@ -97,7 +98,7 @@ def updateorder(ticket_id,order_id):
     form.refund_request.data = order.refund_requested   
     form.refund_reason.data = order.refund_reason
   
-    return render_template('updateorder.html', form=form, title='Update order',getorder=order,genres=genres,total=total)
+    return render_template('updateorder.html', form=form, title='Update order',getorder=order,genres=genres)
 
  # <a href="{{ url_for('admins.updateticket',ticket_id=ticket.id,order_id=order.id )}}" class="btn btn-primary">Edit Feature</a> 
 
@@ -112,11 +113,11 @@ def checkcoupon():
         order = OrderItem.query.filter_by(ref_code=ref_codee).first()
         if order.ref_code:
             ref_id = order.id
-            ticket_id = order.ticket
+            ticket_id = order.ticket_id
             return redirect(url_for('core.updateorder',ticket_id=ticket_id,order_id=ref_id))
         else:
             flash('Invalid coupon','danger')
-            return redirect(url_for('admins.admin'))
+            return redirect(url_for('core.index'))
     # return render_template('order.html', form=form, title='Update order',getorder=order)
 
 # route to approve refund
@@ -138,10 +139,10 @@ def approverefund(order_id):
 
 #function to add calculate total price
 
-def totalprice(order_id):
-    order = OrderItem.query.filter_by(id=order_id).first()
-    ticket = order.ticket
-    quantity = order.quantity
-    price = ticket.price
-    total = price * quantity
-    return total
+# def totalprice(order_id):
+#     order = OrderItem.query.filter_by(id=order_id).first()
+#     ticket = order.ticket
+#     quantity = order.quantity
+#     price = ticket.price
+#     total = price * quantity
+#     return total
