@@ -51,6 +51,8 @@ def addorder(ticket_id):
     genre = Genre.query.all()
     ticket = Ticket.query.all()
     tid = ticket_id
+    theticket = Ticket.query.get(tid)
+    ticketprice = theticket.price
     ref_code = ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
     # form.genre.choices = [(g.id, g.name) for g in Genre.query.filter_by(id='1').all()]
     if request.method == 'POST':
@@ -58,7 +60,8 @@ def addorder(ticket_id):
         date = form.date.data
         time = form.time.data
         coupon = form.coupon.data
-        order = OrderItem(ticket_id=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon,ref_code=ref_code)
+        total =  (int(ticketprice) * int(form.quantity.data))
+        order = OrderItem(ticket_id=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon,ref_code=ref_code,totalprice=total)
         db.session.add(order)
         db.session.commit()
         flash(f'Ticket added successfully','success')
@@ -72,7 +75,7 @@ def updateorder(ticket_id,order_id):
     form = Addorder()
     order = OrderItem.query.filter_by(id=order_id).first() 
     genres = Genre.query.all()
-    ticket = OrderItem.ticket
+    ticketprice = OrderItem.ticket.price
 
     category = request.form.get('genre')
     if request.method =="POST":
@@ -88,7 +91,7 @@ def updateorder(ticket_id,order_id):
 
         flash('The ticket was updated','success')
         db.session.commit()
-        return redirect(url_for('admins.admin'))
+        return redirect(url_for('core.index'))
     
     form.ticket.data = order.ticket
     form.quantity.data = order.quantity
