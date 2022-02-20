@@ -1,3 +1,4 @@
+import email
 from wtforms import BooleanField, StringField, PasswordField, validators , ValidationError, HiddenField,FloatField,IntegerField,SubmitField,SelectField,SelectMultipleField,TextAreaField,FileField,Form,DateTimeField
 from flask_wtf import FlaskForm, Form
 from wtforms.fields.html5 import DateField
@@ -47,4 +48,18 @@ class Addtickets(Form):
     image_1 = FileField('Image 1', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
     image_2 = FileField('Image 2', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
     image_3 = FileField('Image 3', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])
+    submit = SubmitField('SUBMIT')
+
+
+class Addcoupon(Form):
+    code = StringField('Code', [validators.DataRequired()])
+    discount = IntegerField('Discount', default=0)
+    status = SelectField('Status', choices=[('active','Active'),('inactive','Inactive')])
+    submit = SubmitField('SUBMIT')
+    # status = StringField('Status', default=True)
+    # showingdates =
+
+class ProcessForm(Form):
+    name = StringField('Name', [validators.DataRequired()])
+    email = StringField('Email Address', [validators.DataRequired()])
     submit = SubmitField('SUBMIT')

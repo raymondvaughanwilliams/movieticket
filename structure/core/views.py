@@ -1,6 +1,8 @@
 from flask import render_template,request,Blueprint,redirect,url_for,flash,jsonify,Blueprint,current_app
 from  structure import app,db,login_manager,photos
 import string,random
+import json
+import requests
 # from structure.models import User,About,Price, WebFeature,Faq,Testimonial,Team,Appearance,Block
 # # from structure.team.views import team
 # from structure.web_features.forms import WebFeatureForm
@@ -17,7 +19,7 @@ from flask_login import login_required
 # from structure.appearance.forms import AppearanceForm
 # from structure.block.forms import BlockForm
 # from structure.appearance.views import appearance
-from structure.models import Ticket,Genre,OrderItem
+from structure.models import Ticket,Genre,OrderItem, Couponn
 from structure.core.forms import Addorder
 core = Blueprint('core',__name__)
 
@@ -27,13 +29,15 @@ def index():
     This is the home page view. Notice how it uses pagination to show a limited
     number of posts by limiting its query size and then calling paginate.
     '''
+    req = requests.get('https://cat-fact.herokuapp.com/facts')
+    data = json.loads(req.content)
     form = Addorder()
     page = request.args.get('page', 1, type=int)
     newtickets = Ticket.query.order_by(desc(Ticket.pub_date)).limit(3).all()
     tickets = Ticket.query.order_by(desc(Ticket.pub_date)).all()
     # posts = Post.query.order_by(desc(post.date)).limit(3).all()
  
-    return render_template('main.html',title='Home',tickets=tickets,page=page,newtickets=newtickets,form=form)
+    return render_template('main.html',title='Home',tickets=tickets,page=page,newtickets=newtickets,form=form,data=data)
 
 
 # @core.route('/order')
@@ -60,12 +64,21 @@ def addorder(ticket_id):
         date = form.date.data
         time = form.time.data
         coupon = form.coupon.data
-        total =  (int(ticketprice) * int(form.quantity.data))
-        order = OrderItem(ticket_id=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon,ref_code=ref_code,totalprice=total)
-        db.session.add(order)
-        db.session.commit()
-        flash(f'Ticket added successfully','success')
-        return redirect(url_for('core.index'))
+        # coup = Couponn.query.filter_by(code=coupon).first()
+        coupondb = Couponn.query.filter_by(code=coupon).first()
+        if coupondb and coupondb.status == 'active':
+            coupon_price = coupondb.amount
+            total =  (int(ticketprice) * int(form.quantity.data) - int(coupon_price))
+            
+
+            order = OrderItem(ticket_id=ticket_id,quantity=quantity,date=date,time=time,coupon=coupon,ref_code=ref_code,totalprice=total)
+            db.session.add(order)
+            db.session.commit()
+            flash(f'Ticket added successfully','success')
+            return redirect(url_for('core.index'))
+        else:
+            flash(f'Coupon is not active','danger')
+            print('coupon is not active')
     return render_template('order.html',title ="Add Ticket",form=form,genres=genre,tid=tid,tickets = ticket)
 
 
@@ -75,7 +88,7 @@ def updateorder(ticket_id,order_id):
     form = Addorder()
     order = OrderItem.query.filter_by(id=order_id).first() 
     genres = Genre.query.all()
-    ticketprice = OrderItem.ticket.price
+    ticketprice = order.ticket.price
 
     category = request.form.get('genre')
     if request.method =="POST":
@@ -130,6 +143,7 @@ def approverefund(order_id):
     order = OrderItem.query.filter_by(id=order_id).first()
     if request.method =="POST":
         order.refund_granted = form.approve_refund.data
+        order.handled = 'yes'
   
         flash('The refund was approved','success')
         db.session.commit()
@@ -138,7 +152,13 @@ def approverefund(order_id):
     return render_template('index.html', form=form, title='Approve refund',getorder=order)
 
 
-
+# @app.route(, methods=['GET'])
+# def index():
+#        requests.get('https://cat-fact.herokuapp.com/facts')
+#         json. loads ( req.content)
+#      return render_template('index.html', data=data)
+#   req 
+#  data
 
 #function to add calculate total price
 

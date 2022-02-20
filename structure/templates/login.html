@@ -6,4 +6,35 @@
     {{form.password.label}}{{form.password}}<br>
     {{form.submit()}}
   </form>
+
+
+
+
+
+ <script>
+$(document).ready(function() {
+    $('form').on('submit', function(event) {
+        $.ajax({
+            data : {
+                password : $('#password').val(),
+                email : $('#email'). val()
+            },
+            type : 'POST',
+            url : '/login'
+        })
+        .done(function(data) {
+           if (data.error) {
+               $( '#errorAlert').text(data.error).show();
+                $('#')
+            }
+            else {
+            }
+        });
+        event.preventDefault();
+    });
+});
+
+
+
+</script>
 {% endblock %}

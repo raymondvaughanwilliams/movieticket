@@ -4,11 +4,12 @@ from  structure import app,db,login_manager,photos
 from .forms import RegistrationForm,LoginForm,Addtickets
 from structure.models import User
 from flask_admin.contrib.sqla import ModelView
-from structure.models import Ticket,Genre,OrderItem,TicketSchema
+from structure.models import Ticket,Genre,OrderItem,TicketSchema,Couponn
 import secrets
 from datetime import datetime
 import os
 from structure.core.forms import Addorder
+from structure.admin.forms import Addcoupon
 
 
 
@@ -22,13 +23,19 @@ def admin():
 #         flash(f'Please Login','danger')
 #         return redirect(url_for('admins.login'))
     # products = Addproduct.query.all()
-    tickets = Ticket.query.all()
+    ROWS_PER_PAGE = 3
+    page = request.args.get('page', 1, type=int)
+    genre = Genre.query.paginate(page, ROWS_PER_PAGE, False)
+    tickets = Ticket.query.paginate(page, ROWS_PER_PAGE, False)
+    coupon = Couponn.query.paginate(page, ROWS_PER_PAGE, False)
     form = Addorder()
 
     refund_orders = OrderItem.query.filter_by(refund_requested='yes').all()
-    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders,form=form)
+    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders,form=form,coupon=coupon,genre=genre)
 
- 
+
+
+
 @admins.route('/tickets')
 def tickets():
     tickets = Ticket.query.all()
@@ -129,11 +136,57 @@ def delete_ticket(ticket_id):
 
     
     
+@admins.route('/addcoupon', methods=['GET','POST'])
+def addcoupon():
+    form = Addcoupon()
+    if request.method == 'POST':
+        name = form.code.data
+        price = form.discount.data
+        print(name)
+        print(id)
+        coupon = Couponn(code=name,amount=price)
+        # print(coupon)
+        db.session.add(coupon)
+        db.session.commit()
+        flash(f'Coupon added successfully','success')
+        return redirect(url_for('admins.admin'))
+    return render_template('addcoupon.html',form=form)
     
     
     
+@admins.route('/updatecoupon/<int:coupon_id>', methods=['GET','POST'])
+def updatecoupon(coupon_id):
+    form = Addcoupon(request.form)
+    coupon = Couponn.query.get_or_404(coupon_id)
+
+
+    if request.method =="POST":
+        coupon.code = form.code.data 
+        coupon.amount = form.discount.data
+        coupon.status = form.status.data
+
+        flash('The ticket was updated','success')
+        db.session.commit()
+        return redirect(url_for('admins.admin'))
+    form.code.data = coupon.code
+    form.discount.data = coupon.amount
+    form.status.data = coupon.status
+    return render_template('addcoupon.html', form=form)  
     
     
     
-    
-    
+@admins.route('/process', methods=['POST'])
+def process():
+            
+    email = request.form['email']
+    name = request.form['name']
+    print(email)
+    print(name)
+    if name and email:
+        # newName = name[::-1]
+        # return jsonify({'name' : newName})
+        print(email)
+    else:
+        print('error')
+
+    return jsonify({'error' : 'Missing data!'})

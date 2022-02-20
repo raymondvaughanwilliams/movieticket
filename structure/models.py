@@ -131,6 +131,20 @@ tickets_schema = TicketSchema(many=True)
 #         return reverse("core:remove-from-cart", kwargs={
 #             'slug': self.slug
 #         })
+class Couponn(db.Model):
+    __tablename__ = 'coupons'
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(15), nullable=True)
+    amount = db.Column(db.Float, nullable=True)
+    status = db.Column(db.String(20), default='active')
+
+    def __str__(self,id):
+        return self.code
+        return self.id
+        return self.amount
+    
+    def __repr__(self,id):
+        return self.id 
 
 
 class OrderItem(db.Model):
@@ -150,6 +164,8 @@ class OrderItem(db.Model):
     totalprice = db.Column(db.Float, nullable=True)
     phone = db.Column(db.String(20), nullable=True)
     ticket = db.relationship('Ticket',back_populates="orderitems")
+    handled = db.Column(db.String, nullable=True, default='no')
+
 
 
 
@@ -176,6 +192,12 @@ class OrderItemSchema(ma.Schema):
 # Init schema
 orderitem_schema = OrderItemSchema()
 orderitems_schema = OrderItemSchema(many=True)    
+
+
+
+
+
+
 
     # def get_final_price(self):
     #     if self.item.discount_price:
@@ -235,14 +257,9 @@ orderitems_schema = OrderItemSchema(many=True)
 
 
 
-class Coupon(db.Model):
-    __tablename__ = 'coupons'
-    id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(15), nullable=False, primary_key=True)
-    amount = db.Column(db.Float, nullable=False)
 
-    def __str__(self):
-        return self.code
+
+    
 
 # class Refund(db.Model):
 #     # order = db.ForeignKey(Order, on_delete=db.CASCADE)

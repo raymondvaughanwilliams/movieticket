@@ -41,7 +41,8 @@ Licence URI: https://www.os-templates.com/template-terms
         <li><a href="#newest">New Movies</a></li>
             <li><a href="#nowshowing">Now Showing</a></li>
         <li><a href="#about">About Us</a></li>
-        <li><a href="#about">Update Ticket</a></li>
+        <li><button data-toggle="modal" data-target="#editaboutappearance" ><i class="fas fa-palette"></i>Edit Ticket</i></button>
+        </li>
       </ul>
       <!-- ################################################################################################ -->
     </nav>
@@ -132,6 +133,7 @@ Licence URI: https://www.os-templates.com/template-terms
     <!-- ################################################################################################ -->
     <section id="nowshowing">
       <div class="sectiontitle">
+        
         <h6 class="heading">Now showing</h6>
         <p>All the currently showing movies</p>
       </div>
@@ -195,6 +197,11 @@ Licence URI: https://www.os-templates.com/template-terms
     <article><img src="images/demo/100x100.png" alt="">
       <blockquote>porta volutpat sit amet scelerisque sit amet leo morbi sem magna viverra quis sollicitudin quis consectetuer quis magna integer consectetuer tellus sed dui nullam.</blockquote>
       <h6 class="heading font-x1">A. Doe</h6>
+      {% for datas in data %}
+
+
+      <p>{{datas['text']}}</p>
+      {% endfor %}
       <em>justo massa adipiscing</em></article>
     <!-- ################################################################################################ -->
   </div>
@@ -225,7 +232,7 @@ Licence URI: https://www.os-templates.com/template-terms
 </div>
 
 
-<button data-toggle="modal" data-target="#editaboutappearance" class="col-md-12"><i class="fas fa-palette"></i>Edit Ticket</i></button>
+<!--<button data-toggle="modal" data-target="#editaboutappearance" class="col-md-12"><i class="fas fa-palette"></i>Edit Ticket</i></button>-->
 <div class="modal fade" id="editaboutappearance" tabindex="-1" role="dialog" aria-labelledby="editaboutappearance" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
