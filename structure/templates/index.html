@@ -262,7 +262,7 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="d-flex flex-column h-100">
-                    <h5 class="font-weight-bolder">Tickets</h5>
+                    <h5 class="font-weight-bolder">Now Showing Tickets</h5>
                     <p class="mb-5">Edit existing tickets or add new tickets to be displayed on your website</p>
                    
                   </div>
@@ -286,6 +286,7 @@
                   </thead>
                   <tbody>
                   {% for ticket in tickets.items %}
+                  {% if ticket.release_date < currentdate and ticket.display == 'yes' %}
                   <tr>
                     <td>
                       <div class="d-flex px-2 py-1">
@@ -329,6 +330,7 @@
                     </td>
                   </tr>
                   <tr>
+                    {% endif %}
                     {% endfor %}
                     
                
@@ -375,6 +377,142 @@
     </div>
 <br>
 
+
+<!-- Upcoming Tickets -->
+<div class="row">
+  <div class="col-12">
+    <div class="card mb-4">
+      <div class="card-header pb-0">
+        
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="d-flex flex-column h-100">
+              <h5 class="font-weight-bolder">Available Movies</h5>
+              <p class="mb-5">Edit existing tickets or add new tickets to be displayed on your website</p>
+             
+            </div>
+        </div>
+      </div>
+      <!--<a href="#" class="btn btn-primary btn-sm" style="float:right; vertical-align: top;">Add features</a>-->
+      <a href="{{url_for('admins.addticket')}} " class="btn btn-primary btn-sm" style="float:right; vertical-align: top;">Add Ticket</a>
+
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Title</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Release date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Released?</th>
+             
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                <th class="text-secondary opacity-7"></th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for ticket in tickets.items %}
+            {% if ticket.display == 'no'%}
+            <tr>
+              <td>
+                <div class="d-flex px-2 py-1">
+                 
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">{{ticket.name}}</h6>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ ticket.release_date }}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{ ticket.description[:50] }}...</p>
+              </td>
+            
+              <td>
+                {% if ticket.release_date < currentdate %}
+                <p class="text-xs font-weight-bold mb-0">    yes             
+                </p>
+                {% else %}
+                <p class="text-xs font-weight-bold mb-0">    
+                  no             
+                </p>
+                {% endif %}
+              </td>
+              
+              <td class="align-middle">
+                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                  <a href="{{ url_for('admins.updateticket',ticket_id=ticket.id) }}" class="btn btn-primary">Edit Feature</a> 
+                  
+                  <button data-toggle="modal" data-target="#deleteticket{{ticket.id}}"  class="btn btn-danger"><i class="fa fa-edit"></i>Delete</button>
+                  <div class="modal fade" id="deleteticket{{ticket.id}}" tabindex="-1" role="dialog" aria-labelledby="edittestimonial" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="deleteticket{{ticket.id}}">Modal title</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{ url_for('admins.delete_ticket', ticket_id=ticket.id) }}"
+                          >
+                            <input class='btn btn-danger' type="submit" value="Delete">
+                            </div>
+                          </form>
+                        </div> 
+                      </div>
+                    </div>
+                    </div>
+              </td>
+            </tr>
+            <tr>
+              {% endif %}
+              {% endfor %}
+              
+         
+                
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination Links-->
+<div class="text-right">
+<a href="{{ url_for('admins.admin', page=tickets.prev_num) }}"
+class="btn btn-outline-dark 
+{% if tickets.page == 1 %}disabled{% endif %}">
+&laquo;
+</a><!-- Loop through the number of pages to display a link for each-->
+{% for page_num in tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}{% if page_num %}
+<!-- Check for the active page and set the link to "Active"-->
+    {% if tickets.page == page_num %}
+    <a href="{{ url_for('admins.admin', page=page_num) }}"
+       class="btn btn-dark">
+        {{ page_num }}
+    </a>
+    {% else %}
+    <a href="{{ url_for('admins.admin', page=page_num) }}"
+       class="btn btn-outline-dark">
+        {{ page_num }}
+    </a>
+    {% endif %}
+{% else %}
+    ...
+{% endif %}
+{% endfor %}    <a href="{{ url_for('admins.admin', page=tickets.next_num) }}"
+class="btn btn-outline-dark 
+{% if tickets.page == tickets.pages %}disabled{% endif %}">
+&raquo;
+</a>
+</div>
+<p class="text-right mt-3">
+Showing page {{ tickets.page }} of {{ tickets.pages }}
+</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<br>
 
 
 <!-- orders table -->

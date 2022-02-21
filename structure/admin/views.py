@@ -10,6 +10,9 @@ from datetime import datetime
 import os
 from structure.core.forms import Addorder
 from structure.admin.forms import Addcoupon
+import urllib.request, json
+import datetime
+
 
 
 
@@ -23,7 +26,41 @@ def admin():
 #         flash(f'Please Login','danger')
 #         return redirect(url_for('admins.login'))
     # products = Addproduct.query.all()
-    ROWS_PER_PAGE = 3
+    url= 'https://api.themoviedb.org/3/movie/upcoming?api_key=9456f6d01dd8059ec4fd676e33a3a769&language=en-US&page=1'
+    response = urllib.request.urlopen(url)
+    mdata = response.read()
+    dict = json.loads(mdata)
+
+    # movies = []
+
+    for movie in dict["results"]:
+ 
+        title = movie["title"]
+        titl = Ticket.query.filter_by(name=title).first()
+        if titl is None:
+
+
+   
+            title = movie["title"]
+            description = movie["overview"]
+            release = movie["release_date"]
+            img = "http://image.tmdb.org/t/p/w500"+movie["poster_path"]
+            expectedDate = datetime.datetime.strptime(release, "%Y-%m-%d")
+            print(expectedDate)
+            poster = movie["poster_path"]
+            ticket = Ticket(name=title,description=description,release_date=expectedDate,status='inactive',price= '0',genre_id=1,userr_id='1',display='no',image_1=img)
+            db.session.add(ticket)
+            db.session.commit()
+
+
+
+        
+    #     movies.append(movie)
+    currentdate = datetime.datetime.now()
+    currentdate = currentdate.strftime("%Y-%m-%d")
+    print(currentdate)
+
+    ROWS_PER_PAGE = 10
     page = request.args.get('page', 1, type=int)
     genre = Genre.query.paginate(page, ROWS_PER_PAGE, False)
     tickets = Ticket.query.paginate(page, ROWS_PER_PAGE, False)
@@ -31,7 +68,7 @@ def admin():
     form = Addorder()
 
     refund_orders = OrderItem.query.filter_by(refund_requested='yes').all()
-    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders,form=form,coupon=coupon,genre=genre)
+    return render_template('index.html',title ="Admin Page",tickets=tickets,orders=refund_orders,form=form,coupon=coupon,genre=genre,currentdate=currentdate)
 
 
 
@@ -60,7 +97,8 @@ def addticket():
         image_1 = photos.save(request.files['image_1'], name=secrets.token_hex(10) + ".")
         status = form.status.data
         showingdates = form.showingdates.data
-        ticket = Ticket(name= name,price=price,date=date,discount_price=discount,description=description,image_1=image_1,genre=genre,userr_id='1',pub_date=datetime.utcnow(),genre_id=1,status=status,showingdates=showingdates)
+        img= "static/images/"+image_1
+        ticket = Ticket(name= name,price=price,date=date,discount_price=discount,description=description,image_1=img,genre=genre,userr_id='1',pub_date=datetime.utcnow(),genre_id=1,status=status,showingdates=showingdates,display='yes')
         db.session.add(ticket)
         db.session.commit()
         flash(f'Ticket added successfully','success')
@@ -103,6 +141,7 @@ def updateticket(ticket_id):
         ticket.description = form.description.data
         ticket.genre = genre
         ticket.status = form.status.data
+        ticket.display = form.display.data
         ticket.showingdates = form.showingdates.data
         if request.files.get('image_1'):
             try:
@@ -121,6 +160,7 @@ def updateticket(ticket_id):
     form.description.data = ticket.description
     genre = ticket.genre
     form.status.data = ticket.status
+    form.display.data = ticket.display
     form.showingdates.data = ticket.showingdates
     return render_template('addticket.html', form=form, title='Update ticket',getticket=ticket,genres=genres)  
 

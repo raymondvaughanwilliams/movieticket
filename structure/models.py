@@ -65,6 +65,8 @@ class Ticket(db.Model):
     status = db.Column(db.Text, default='True')
     showingdates = db.Column(db.String(255), nullable=True)
     orderitems = db.relationship('OrderItem',back_populates="ticket")
+    release_date = db.Column(db.String(20), nullable=True)
+    display = db.Column(db.String(255), default='no', nullable=True)
 
 
 

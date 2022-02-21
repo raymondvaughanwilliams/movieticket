@@ -80,8 +80,9 @@ Licence URI: https://www.os-templates.com/template-terms
   
     <ul class="nospace group prices">
       {% for ticket in newtickets  %}
+      {% if ticket.release_date < currentdate %}
       <li class="one_third">
-        <img src="static/images/{{ticket.image_1}}" alt="..." class="img-thumbnail">
+        <img src="{{ticket.image_1}}" alt="..." class="img-thumbnail">
         <!--<article><i class="fas fa-deaf red"></i>-->
           <h6 class="heading">{{ticket.name}}</h6>
           <p>{{ticket.description}}</p>
@@ -89,6 +90,7 @@ Licence URI: https://www.os-templates.com/template-terms
           <footer><a class="btn"  href="{{ url_for('core.addorder',ticket_id=ticket.id) }}">Buy Ticket</a></footer>
         </article>
       </li>
+      {% endif %}
       {% endfor %}
       <!--<li class="one_third">
         <article><i class="fas fa-dolly green"></i>
@@ -142,7 +144,7 @@ Licence URI: https://www.os-templates.com/template-terms
         {% for ticket in tickets  %}
         {% if ticket.status == 'active' %}
         <li class="one_third">
-          <img src="static/images/{{ticket.image_1}}" alt="..." class="img-thumbnail">
+          <img src="{{ticket.image_1}}" alt="..." class="img-thumbnail">
           <h6 class="heading">{{ticket.name}}</h6>
             <p>{{ticket.description}}</p>
             <p><strong>{{ticket.price}}</strong><em> cedis</em></p>
@@ -191,26 +193,35 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper bgded overlay" style="background-image:url('images/demo/backgrounds/01.png');">
-  <div class="hoc container testimonial clear"> 
-    <!-- ################################################################################################ -->
-    <article><img src="images/demo/100x100.png" alt="">
-      <blockquote>porta volutpat sit amet scelerisque sit amet leo morbi sem magna viverra quis sollicitudin quis consectetuer quis magna integer consectetuer tellus sed dui nullam.</blockquote>
-      <h6 class="heading font-x1">A. Doe</h6>
-      {% for datas in data %}
 
-
-      <p>{{datas['text']}}</p>
-      {% endfor %}
-      <em>justo massa adipiscing</em></article>
-    <!-- ################################################################################################ -->
-  </div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- Upcoming Movies -->
+<div class="sectiontitle">
+        
+  <h6 class="heading">Upcoming Movies</h6>
+  <p>Unreleased movies</p>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper row3">
-  <section id="cta" class="hoc container clear"> 
+    {% for ticket in tickets %}
+    {% if ticket.release_date > currentdate and ticket.display == 'yes' %}
+    <li class="one_third">
+      <img style="height:500px;" src="{{ticket.image_1}}" alt="..." class="img-thumbnail">
+      <h6 class="heading">{{ticket.name}}</h6> 
+        <p>{{ticket.description}}</p>
+        <p><strong>{{ticket.price}}</strong><em>cedis </em></p>
+      </article>
+    </li>
+
+    {% endif %}
+    {% endfor %}
+
+
+
+
+
+
+
+
     <!-- ################################################################################################ -->
     <ul class="nospace clear">
       <li class="one_quarter first">

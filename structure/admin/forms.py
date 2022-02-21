@@ -43,6 +43,7 @@ class Addtickets(Form):
     status = SelectField('Status', choices=[('active','Active'),('inactive','Inactive')])
     # status = StringField('Status', default=True)
     showingdates = TextAreaField('Showing Dates and Times', [validators.DataRequired()])
+    display = SelectField('Display', choices=[('yes','Yes'),('no','No')])   
 
 
     image_1 = FileField('Image 1', validators=[FileRequired(), FileAllowed(['jpg','png','gif','jpeg'])])

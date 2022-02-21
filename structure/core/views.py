@@ -3,6 +3,7 @@ from  structure import app,db,login_manager,photos
 import string,random
 import json
 import requests
+import datetime
 # from structure.models import User,About,Price, WebFeature,Faq,Testimonial,Team,Appearance,Block
 # # from structure.team.views import team
 # from structure.web_features.forms import WebFeatureForm
@@ -21,6 +22,7 @@ from flask_login import login_required
 # from structure.appearance.views import appearance
 from structure.models import Ticket,Genre,OrderItem, Couponn
 from structure.core.forms import Addorder
+import urllib.request, json
 core = Blueprint('core',__name__)
 
 @core.route('/')
@@ -30,14 +32,39 @@ def index():
     number of posts by limiting its query size and then calling paginate.
     '''
     req = requests.get('https://cat-fact.herokuapp.com/facts')
+    moviereq = requests.get('https://api.themoviedb.org/3/movie/upcoming?api_key=9456f6d01dd8059ec4fd676e33a3a769&language=en-US&page=1')
+    url= 'https://api.themoviedb.org/3/movie/upcoming?api_key=9456f6d01dd8059ec4fd676e33a3a769&language=en-US&page=1'
+    moviedata = json.loads(moviereq.text)
     data = json.loads(req.content)
+
+    response = urllib.request.urlopen(url)
+    mdata = response.read()
+    dict = json.loads(mdata)
+
+    # response = urllib.request.urlopen(url)
+    # movies = response.read()
+    # dict = json.loads(movies)
+
+    # movies = []
+
+    # for movie in dict["results"]:
+    #     movie = {
+    #         "title": movie["title"],
+    #         "overview": movie["overview"],
+    #     }
+        
+    #     movies.append(movie)
+    currentdate = datetime.datetime.now()
+    currentdate = currentdate.strftime("%Y-%m-%d")
     form = Addorder()
     page = request.args.get('page', 1, type=int)
-    newtickets = Ticket.query.order_by(desc(Ticket.pub_date)).limit(3).all()
+    showing = Ticket.query.filter_by(display='yes').paginate(page, 4, False)
+    # newtickets = Ticket.query.order_by(desc(Ticket.pub_date)).limit(3).all()
+    newtickets = Ticket.query.filter_by(display='yes').order_by(desc(Ticket.pub_date)).limit(4).all()
     tickets = Ticket.query.order_by(desc(Ticket.pub_date)).all()
     # posts = Post.query.order_by(desc(post.date)).limit(3).all()
  
-    return render_template('main.html',title='Home',tickets=tickets,page=page,newtickets=newtickets,form=form,data=data)
+    return render_template('main.html',title='Home',tickets=tickets,page=page,newtickets=newtickets,form=form,data=data,moviedata=moviedata,movies = dict["results"],currentdate=currentdate)
 
 
 # @core.route('/order')
@@ -169,3 +196,20 @@ def approverefund(order_id):
 #     price = ticket.price
 #     total = price * quantity
 #     return total
+
+
+
+
+#    {% for movie in movies %}
+#     {% if movie.display == 'yes' %}
+#     <li class="one_third">
+#       <img style="height:500px;" src="http://image.tmdb.org/t/p/w500{{movie['poster_path']}}" alt="..." class="img-thumbnail">
+#       <h6 class="heading">{{movie['title']}}</h6> 
+#         <p>{{movie['overview']}}</p>
+#         <p>Release date:<strong>{{movie['release_date']}}</strong><em> </em></p>
+#       </article>
+#     </li>
+#   <!---<p>{{movie['title']}}</p>
+#    <p>{{movie['release_date']}}</p>-->
+#     {% endif %}
+#     {% endfor %}
